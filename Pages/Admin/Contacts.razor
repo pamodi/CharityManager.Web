@@ -1,14 +1,16 @@
 ﻿@page "/admin/contacts"
+
 @layout MainLayout
 @inject HttpClient Http
+@inject NavigationManager NavigationManager
 
 <h3>User List</h3>
 
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <button class="btn btn-success">Create Contact</button>
+    <button class="btn btn-success" @onclick="CreateContact">Create Contact</button>
 </div>
 
-@if (userList == null)
+@if (userList == null || !userList.Any())
 {
     <p>Loading...</p>
 }
@@ -73,5 +75,10 @@ else
         public Guid Guid { get; set; }
         public string? Description { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
+    }
+
+    private void CreateContact()
+    {
+        NavigationManager.NavigateTo("/admin/create/contact");
     }
 }

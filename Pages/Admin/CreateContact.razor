@@ -1,0 +1,112 @@
+﻿@page "/admin/create/contact"
+@layout MainLayout
+@inject HttpClient Http
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+@using System.ComponentModel.DataAnnotations
+
+<h3 style="margin-left:10px">Create Contact</h3>
+
+<div class="container-fluid d-flex justify-content-center">
+    <div class="card p-3 shadow-lg" style="width: 900px; height: 460px">
+        <EditForm Model="@userCreateRequest" OnValidSubmit="HandleUserCreate">
+            <DataAnnotationsValidator />
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="firstname" class="form-label">First Name</label>
+                    <InputText class="form-control" id="firstname" @bind-Value="userCreateRequest.FirstName" placeholder="Enter First Name" required />
+                    <ValidationMessage For="@(() => userCreateRequest.FirstName)" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="lastname" class="form-label">Last Name</label>
+                    <InputText class="form-control" id="lastname" @bind-Value="userCreateRequest.LastName" placeholder="Enter Last Name" />
+                    <ValidationMessage For="@(() => userCreateRequest.LastName)" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <InputText class="form-control" id="email" @bind-Value="userCreateRequest.Email" placeholder="Enter Email Address" />
+                    <ValidationMessage For="@(() => userCreateRequest.Email)" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="phonenumber" class="form-label">Phone Number</label>
+                    <InputText class="form-control" id="phonenumber" @bind-Value="userCreateRequest.PhoneNumber" placeholder="Enter Phone Number" />
+                    <ValidationMessage For="@(() => userCreateRequest.PhoneNumber)" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="whatsapp" class="form-label">Phone Number</label>
+                    <InputText class="form-control" id="whatsapp" @bind-Value="userCreateRequest.WhatsApp" placeholder="Enter Whatsapp Number" />
+                    <ValidationMessage For="@(() => userCreateRequest.WhatsApp)" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="address" class="form-label">Address</label>
+                    <InputText class="form-control" id="address" @bind-Value="userCreateRequest.Address" placeholder="Enter Address" />
+                    <ValidationMessage For="@(() => userCreateRequest.Address)" />
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <InputTextArea class="form-control" id="description" @bind-Value="userCreateRequest.Description" placeholder="Enter Description" />
+                <ValidationMessage For="@(() => userCreateRequest.Description)" />
+             </div>
+
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-secondary me-2" @onclick="Cancel">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+            @if (errorMessage != null)
+            {
+                <div class="alert alert-danger mt-3">@errorMessage</div>
+            }
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    private UserCreateRequest userCreateRequest = new UserCreateRequest();
+    private string errorMessage = null;
+
+    private async Task HandleUserCreate()
+    {
+        try
+        {
+            var response = await Http.PostAsJsonAsync($"{AppSettings.APIUrl}/contact", userCreateRequest);
+            if (response.IsSuccessStatusCode)
+            {
+                NavigationManager.NavigateTo("/admin/contacts");
+            }
+            else
+            {
+                errorMessage = "Error in user creation.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An error occurred: " + ex.Message;
+        }
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/admin/contacts");
+    }
+
+    public class UserCreateRequest
+    {
+        [Required]
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string? Email { get; set; }
+        public string? PhoneNumber { get; set; }
+        public string? WhatsApp { get; set; }
+        public string? Address { get; set; }
+        public string? Description { get; set; }
+    }
+}
+
