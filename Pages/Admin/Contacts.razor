@@ -1,0 +1,77 @@
+﻿@page "/admin/contacts"
+@layout MainLayout
+@inject HttpClient Http
+
+<h3>User List</h3>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <button class="btn btn-success">Create Contact</button>
+</div>
+
+@if (userList == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>WhatsApp Number</th>
+                <th>Address</th>
+                <th>Description</th>
+                <th>Created At</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in userList)
+            {
+                <tr>
+                    <td>@user.Id</td>
+                    <td>@user.FirstName</td>
+                    <td>@user.LastName</td>
+                    <td>@user.Email</td>
+                    <td>@user.PhoneNumber</td>
+                    <td>@user.WhatsApp</td>
+                    <td>@user.Address</td>
+                    <td>@user.Description</td>
+                    <td>@user.CreatedAt.UtcDateTime</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    private IEnumerable<UserModel> userList = Enumerable.Empty<UserModel>();
+
+    protected override async Task OnInitializedAsync() => await LoadUsersAsync();
+
+    private async Task LoadUsersAsync()
+    {
+        if (AppSettings.APIUrl != null)
+            userList = await Http.GetFromJsonAsync<UserModel[]>($"{AppSettings.APIUrl}/contact");
+    }
+
+    public class UserModel
+    {
+        public int Id { get; set; }
+        public string? DisplayName { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public string? Email { get; set; }
+        public string? PhoneNumber { get; set; }
+        public string? WhatsApp { get; set; }
+        public string? Address { get; set; }
+        public string Role { get; set; }
+        public Guid Guid { get; set; }
+        public string? Description { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
+    }
+}
