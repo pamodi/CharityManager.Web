@@ -1,5 +1,36 @@
 ﻿@page "/admin/home"
 @layout MainLayout
+@using Microsoft.AspNetCore.Components.Web
 
-<h1>Admin Dashboard</h1>
-<p>Welcome to the admin dashboard! Use the navigation menu to explore other sections.</p>
+<div class="container-fluid d-flex justify-content-center" style="margin-left:-25px">
+    <div class="card p-3 shadow-lg" style="width: 1000px; height: 390px">
+        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                @for (var i = 0; i < Images.Count; i++)
+                {
+                    <div class="carousel-item @(i == 0 ? "active" : "")">
+                        <img src="@Images[i]" class="d-block w-100" alt="...">
+                    </div>
+                }
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    private List<string> Images = new List<string>
+    {
+        "./assets/img/CarouselImg1.jpg",
+        "./assets/img/CarouselImg2.jpg",
+        "./assets/img/CarouselImg3.jpg",
+    };
+}
