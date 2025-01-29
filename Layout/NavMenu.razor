@@ -16,7 +16,7 @@
                 </NavLink>
             </li>
             <li class="nav-item">
-                <NavLink class="nav-link" href="/admin/projects">
+                <NavLink class="nav-link" href="/admin/projects" Match="NavLinkMatch.Prefix">
                     <i class="bi bi-file-text-fill me-2"></i> Projects
                 </NavLink>
             </li>
@@ -25,12 +25,12 @@
         {
             <li class="nav-item">
                 <NavLink class="nav-link" href="/user/home" Match="NavLinkMatch.All">
-                    <i class="bi bi-file-text-fill me-2"></i> Dashboard
+                    <i class="bi bi-house-fill me-2"></i> Dashboard
                 </NavLink>
             </li>
             <li class="nav-item">
-                <NavLink class="nav-link" href="/user/projects">
-                    <i class="bi bi-box-seam me-2"></i> Projects
+                <NavLink class="nav-link" href="/user/projects" Match="NavLinkMatch.Prefix">
+                    <i class="bi bi-file-text-fill me-2"></i> Projects
                 </NavLink>
             </li>
         }

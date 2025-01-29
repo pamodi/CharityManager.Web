@@ -1,9 +1,92 @@
 ﻿@page "/user/projects"
 @layout MainLayout
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
 
 <h4 style="margin-left:-2px; margin-bottom:15px">Projects</h4>
 
 <div class="container-fluid d-flex justify-content-center" style="margin-left:-25px">
     <div class="card p-3 shadow-lg" style="width: 1035px; height: 430px">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex align-items-center">
+                <input type="text" class="form-control me-2" placeholder="Search..." style="width: 250px;" />
+                <button class="btn btn-secondary">Clear</button>
+            </div>
+        </div>
+
+        @if (projectsList == null || !projectsList.Any())
+        {
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        }
+        else
+        {
+            <table class="table table-striped table-hover table-responsive">
+                <thead class="table-light">
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th style="width:210px">Description</th>
+                        <th>Status</th>
+                        <th>Category</th>
+                        <th>Coordinator</th>
+                        <th>Created On</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var project in projectsList)
+                    {
+                        <tr>
+                            <td>@project.Id</td>
+                            <td>@project.Name</td>
+                            <td>@project.Description</td>
+                            <td>@project.Status</td>
+                            <td>@project.Category</td>
+                            <td>@project.Coordinator</td>
+                            <td>@project.CreatedAt.UtcDateTime.ToString("yyyy-MM-dd")</td>
+                            <td>
+                                <div class="d-flex">
+                                    <button class="btn btn-sm me-2" title="View More">
+                                        <i class="bi bi-folder-fill"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
     </div>
 </div>
+
+
+@code {
+
+    private IEnumerable<ProjectModel> projectsList = Enumerable.Empty<ProjectModel>();
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync() => await LoadUsersAsync();
+
+    private async Task LoadUsersAsync()
+    {
+        isLoading = true;
+        if (AppSettings.APIUrl != null)
+            projectsList = await Http.GetFromJsonAsync<ProjectModel[]>($"{AppSettings.APIUrl}/project");
+        isLoading = false;
+    }
+
+    public class ProjectModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string? Description { get; set; }
+        public string? Status { get; set; }
+        public string? Category { get; set; }
+        public string? Coordinator { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
+    }
+}
