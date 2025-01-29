@@ -4,20 +4,25 @@
     <!-- Top Navbar -->
     <header class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm px-3">
         <div class="d-flex justify-content-between w-100">
-            <span class="navbar-brand" style="font-size:medium">CHARITY MANAGER</span>
+            <span class="navbar-brand fw-bold" style="font-size:medium">CHARITY MANAGER</span>
             <a href="/" class="btn btn-outline-light">Sign out</a>
         </div>
     </header>
 
-    <div class="d-flex flex-grow-1">
+    <div class="d-flex flex-grow-1 overflow-hidden">
         <!-- Sidebar -->
-        <aside class="border-end" style="width: 250px; background-color:white">
+        <aside class="border-end shadow-sm d-flex flex-column" style="width: 250px; min-height: 100vh; overflow-y: auto;">
             <NavMenu />
         </aside>
 
         <!-- Main Content -->
-        <article class="content px-4">
+        <main class="content flex-grow-1 px-4 py-3 overflow-auto">
             @Body
-        </article>
+        </main>
     </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light text-center py-2 mt-auto">
+        <small>&copy; 2025 All rights reserved | Developed by Pamodi Rathnayake</small>
+    </footer>
 </div>

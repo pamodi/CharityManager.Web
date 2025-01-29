@@ -6,17 +6,17 @@
         @if (role == "ADMIN")
         {
             <li class="nav-item">
-                <NavLink class="nav-link" href="/admin/home" Match="NavLinkMatch.All">
+                <NavLink class="nav-link text-dark" href="/admin/home" Match="NavLinkMatch.All">
                     <i class="bi bi-house-fill me-2"></i> Dashboard
                 </NavLink>
             </li>
             <li class="nav-item">
-                <NavLink class="nav-link" href="/admin/contacts" Match="NavLinkMatch.Prefix">
+                <NavLink class="nav-link text-dark" href="/admin/contacts" Match="NavLinkMatch.Prefix">
                     <i class="bi bi-person-lines-fill me-2"></i> Contacts
                 </NavLink>
             </li>
             <li class="nav-item">
-                <NavLink class="nav-link" href="/admin/projects" Match="NavLinkMatch.Prefix">
+                <NavLink class="nav-link text-dark" href="/admin/projects" Match="NavLinkMatch.Prefix">
                     <i class="bi bi-file-text-fill me-2"></i> Projects
                 </NavLink>
             </li>
@@ -24,12 +24,12 @@
         else if (role == "USER")
         {
             <li class="nav-item">
-                <NavLink class="nav-link" href="/user/home" Match="NavLinkMatch.All">
+                <NavLink class="nav-link text-dark" href="/user/home" Match="NavLinkMatch.All">
                     <i class="bi bi-house-fill me-2"></i> Dashboard
                 </NavLink>
             </li>
             <li class="nav-item">
-                <NavLink class="nav-link" href="/user/projects" Match="NavLinkMatch.Prefix">
+                <NavLink class="nav-link text-dark" href="/user/projects" Match="NavLinkMatch.Prefix">
                     <i class="bi bi-file-text-fill me-2"></i> Projects
                 </NavLink>
             </li>
@@ -40,7 +40,7 @@
 
     <ul class="nav nav-pills flex-column">
         <li class="nav-item">
-            <NavLink class="nav-link" href="/profile">
+            <NavLink class="nav-link text-dark" href="/profile">
                 <i class="bi bi-person-badge me-2"></i> Profile
             </NavLink>
         </li>
@@ -55,5 +55,3 @@
         role = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "role");
     }
 }
-
-
