@@ -19,7 +19,6 @@
                 <div class="col-md-6 mb-3">
                     <label for="lastname" class="form-label">Last Name</label>
                     <InputText class="form-control" id="lastname" @bind-Value="userCreateRequest.LastName" placeholder="Enter Last Name" />
-                    <ValidationMessage For="@(() => userCreateRequest.LastName)" />
                 </div>
             </div>
 
@@ -45,14 +44,12 @@
                 <div class="col-md-6 mb-3">
                     <label for="address" class="form-label">Address</label>
                     <InputText class="form-control" id="address" @bind-Value="userCreateRequest.Address" placeholder="Enter Address" />
-                    <ValidationMessage For="@(() => userCreateRequest.Address)" />
                 </div>
             </div>
 
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
                 <InputTextArea class="form-control" id="description" @bind-Value="userCreateRequest.Description" placeholder="Enter Description" />
-                <ValidationMessage For="@(() => userCreateRequest.Description)" />
             </div>
 
             <div class="d-flex justify-content-end">
@@ -124,8 +121,11 @@
         [Required]
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        [EmailAddress]
         public string? Email { get; set; }
+        [Phone]
         public string? PhoneNumber { get; set; }
+        [Phone]
         public string? WhatsApp { get; set; }
         public string? Address { get; set; }
         public string? Description { get; set; }

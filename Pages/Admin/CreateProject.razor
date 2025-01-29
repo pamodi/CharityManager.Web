@@ -21,7 +21,6 @@
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
                 <InputTextArea class="form-control" id="description" @bind-Value="projectCreateRequest.Description" placeholder="Enter Project Description" />
-                <ValidationMessage For="@(() => projectCreateRequest.Description)" />
             </div>
 
             <div class="row">

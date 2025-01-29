@@ -51,10 +51,10 @@
                             <td>@project.CreatedAt.UtcDateTime.ToString("yyyy-MM-dd")</td>
                             <td>
                                 <div class="d-flex">
-                                    <button class="btn btn-sm me-2" title="View More" >
+                                    <button class="btn btn-sm me-2" title="View More" @onclick="() => NavigateToDetails(project.Id, false)">
                                         <i class="bi bi-folder-fill"></i>
                                     </button>
-                                    <button class="btn btn-sm me-2" title="Update" >
+                                    <button class="btn btn-sm me-2" title="Update" @onclick="() => NavigateToDetails(project.Id, true)">
                                         <i class="bi bi-pen-fill"></i>
                                     </button>
                                     <button class="btn btn-sm" title="Delete" >
@@ -84,6 +84,14 @@
         if (AppSettings.APIUrl != null)
             projectsList = await Http.GetFromJsonAsync<ProjectModel[]>($"{AppSettings.APIUrl}/project");
         isLoading = false;
+    }
+
+    private void NavigateToDetails(int projectId, bool isEditMode)
+    {
+        if (isEditMode)
+            NavigationManager.NavigateTo($"/admin/projects/details/{projectId}/update");
+        else
+            NavigationManager.NavigateTo($"/admin/projects/details/{projectId}");
     }
 
     public class ProjectModel

@@ -19,25 +19,29 @@
         else 
         {
             <EditForm Model="@userModel">
+                <DataAnnotationsValidator />
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="firstname" class="form-label">First Name</label>
-                        <InputText class="form-control" id="firstname" @bind-Value="userModel.FirstName" disabled="@(!isEditMode)" />
-                    </div>
+                        <InputText class="form-control" id="firstname" @bind-Value="userModel.FirstName" disabled="@(!isEditMode)" required />
+                        <ValidationMessage For="@(() => userModel.FirstName)" />
+                      </div>
                     <div class="col-md-6 mb-3">
                         <label for="lastname" class="form-label">Last Name</label>
                         <InputText class="form-control" id="lastname" @bind-Value="userModel.LastName" disabled="@(!isEditMode)" />
-                    </div>
+                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="email" class="form-label">Email</label>
                         <InputText class="form-control" id="email" @bind-Value="userModel.Email" disabled="@(!isEditMode)" />
+                        <ValidationMessage For="@(() => userModel.Email)" />
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="phonenumber" class="form-label">Phone Number</label>
                         <InputText class="form-control" id="phonenumber" @bind-Value="userModel.PhoneNumber" disabled="@(!isEditMode)" />
+                        <ValidationMessage For="@(() => userModel.PhoneNumber)" />
                     </div>
                 </div>
 
@@ -45,7 +49,8 @@
                     <div class="col-md-6 mb-3">
                         <label for="whatsapp" class="form-label">WhatsApp Number</label>
                         <InputText class="form-control" id="whatsapp" @bind-Value="userModel.WhatsApp" disabled="@(!isEditMode)" />
-                    </div>
+                        <ValidationMessage For="@(() => userModel.WhatsApp)" />
+                      </div>
                     <div class="col-md-6 mb-3">
                         <label for="address" class="form-label">Address</label>
                         <InputText class="form-control" id="address" @bind-Value="userModel.Address" disabled="@(!isEditMode)" />

@@ -1,0 +1,128 @@
+﻿@page "/admin/projects/details/{projectId:int}"
+@page "/admin/projects/details/{projectId:int}/update"
+@layout MainLayout
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h4 style="margin-left:-2px; margin-bottom:15px">@headerTitle</h4>
+
+<div class="container-fluid d-flex justify-content-center" style="margin-left:-25px">
+    <div class="card p-3 shadow-lg" style="width: 1035px; height: 430px">
+        @if (projectModel == null)
+        {
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        }
+        else
+        {
+            <EditForm Model="@projectModel">
+                <DataAnnotationsValidator />
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="projectname" class="form-label">Project Name</label>
+                        <InputText class="form-control" id="projectname" @bind-Value="projectModel.Name" placeholder="Enter Project Name" required disabled="@(!isEditMode)" />
+                        <ValidationMessage For="@(() => projectModel.Name)" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <InputTextArea class="form-control" id="description" @bind-Value="projectModel.Description" placeholder="Enter Project Description" disabled="@(!isEditMode)" />
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <InputText class="form-control" id="category" @bind-Value="projectModel.Category" placeholder="Enter Project Category" disabled="@(!isEditMode)" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="coordinator" class="form-label">Coordinator</label>
+                        <InputText class="form-control" id="coordinator" @bind-Value="projectModel.Coordinator" placeholder="Enter Project Coordinator" disabled="@(!isEditMode)" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="status" class="form-label">Status</label>
+                    <InputText class="form-control" id="status" @bind-Value="projectModel.Status" placeholder="Enter Project Status" disabled="@(!isEditMode)" />
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-secondary me-2" @onclick="Cancel">Cancel</button>
+                    @if (isEditMode)
+                    {
+                        <button type="submit" class="btn btn-primary" @onclick="UpdateProject">Update</button>
+                    }
+                </div>
+                @if (errorMessage != null)
+                {
+                    <div class="alert alert-danger mt-3">@errorMessage</div>
+                }
+            </EditForm>
+        }
+    </div>
+</div>
+
+<!-- Success Modal -->
+@if (showSuccessModal)
+{
+    <AlertDialog Title="Suceess"
+                 BodyText="Project Updated Successfully"
+                 IsDelete="false"
+                 CloseBtnClick="Cancel"
+                 OkBtnClick="Cancel" />
+}
+
+@code {
+    [Parameter] public int projectId { get; set; }
+    private bool isEditMode = false;
+    public ProjectModel projectModel { get; set; }
+    private string headerTitle = "Project Details";
+    private bool showSuccessModal = false;
+    private string errorMessage = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isEditMode = NavigationManager.Uri.EndsWith("/update", StringComparison.OrdinalIgnoreCase);
+
+        headerTitle = isEditMode ? "Update Project Details" : "Project Details";
+
+        await LoadProjectDetailsAsync();
+    }
+
+    private async Task LoadProjectDetailsAsync()
+    {
+        if (AppSettings.APIUrl != null)
+            projectModel = await Http.GetFromJsonAsync<ProjectModel>($"{AppSettings.APIUrl}/project/{projectId}");
+    }
+
+    private async Task UpdateProject()
+    {
+        if (AppSettings.APIUrl != null)
+        {
+            var response = await Http.PutAsJsonAsync($"{AppSettings.APIUrl}/project/{projectId}", projectModel);
+            if (response.IsSuccessStatusCode)
+                showSuccessModal = true;
+            else
+                errorMessage = "Error in project update.";
+        }
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/admin/projects");
+    }
+
+    public class ProjectModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string? Description { get; set; }
+        public string? Status { get; set; }
+        public string? Category { get; set; }
+        public string? Coordinator { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
+    }
+}
