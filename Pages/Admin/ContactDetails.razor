@@ -61,19 +61,35 @@
                     <button type="button" class="btn btn-secondary me-2" @onclick="Cancel">Cancel</button>
                     @if (isEditMode)
                     {
-                        <button type="submit" class="btn btn-primary">Update</button>
+                        <button type="submit" class="btn btn-primary" @onclick="UpdateContact">Update</button>
                     }
                 </div>
+                @if (errorMessage != null)
+                {
+                    <div class="alert alert-danger mt-3">@errorMessage</div>
+                }
             </EditForm>
         }
     </div>
 </div>
+
+<!-- Success Modal -->
+@if (showSuccessModal)
+{
+    <AlertDialog Title="Suceess"
+                 BodyText="Contact Updated Successfully"
+                 IsDelete="false"
+                 CloseBtnClick="Cancel"
+                 OkBtnClick="Cancel" />
+}
 
 @code {
     [Parameter] public int userId { get; set; }
     private bool isEditMode = false;
     public UserModel userModel { get; set; }
     private string headerTitle = "Contact Details";
+    private bool showSuccessModal = false;
+    private string errorMessage = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -88,6 +104,17 @@
     {
         if (AppSettings.APIUrl != null)
             userModel = await Http.GetFromJsonAsync<UserModel>($"{AppSettings.APIUrl}/contact/{userId}");
+    }
+
+    private async Task UpdateContact()
+    {
+        if (AppSettings.APIUrl != null) {
+            var response = await Http.PutAsJsonAsync($"{AppSettings.APIUrl}/contact/{userId}", userModel);
+            if (response.IsSuccessStatusCode)
+                showSuccessModal = true;
+            else
+                errorMessage = "Error in user update.";
+        }      
     }
         
     private void Cancel()

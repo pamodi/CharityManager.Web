@@ -100,11 +100,11 @@
 						return;
 					}
 					await JSRuntime.InvokeVoidAsync("localStorage.setItem", "role", result.Role);
-					if (result.Role == "Admin")
+					if (result.Role == "ADMIN")
 					{
 						Navigation.NavigateTo("/admin/home");
 					}
-					else if (result.Role == "User")
+					else if (result.Role == "USER")
 					{
 						Navigation.NavigateTo("/user/home");
 					}

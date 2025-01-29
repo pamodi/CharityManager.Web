@@ -3,7 +3,7 @@
 
 <div class="d-flex flex-column p-3">
     <ul class="nav nav-pills flex-column mb-auto">
-        @if (role == "Admin")
+        @if (role == "ADMIN")
         {
             <li class="nav-item">
                 <NavLink class="nav-link" href="/admin/home" Match="NavLinkMatch.All">
@@ -21,7 +21,7 @@
                 </NavLink>
             </li>
         }
-        else if (role == "User")
+        else if (role == "USER")
         {
             <li class="nav-item">
                 <NavLink class="nav-link" href="/user/home" Match="NavLinkMatch.All">

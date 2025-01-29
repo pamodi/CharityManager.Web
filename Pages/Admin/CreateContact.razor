@@ -70,23 +70,11 @@
 <!-- Success Modal -->
 @if (showSuccessModal)
 {
-    <div class="modal show d-block align-content-center" tabindex="-1" role="dialog" style="background-color: rgba(0, 0, 0, 0.5);">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Suceess</h5>
-                    <button type="button" class="btn-close" aria-label="Close" @onclick="Cancel"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Contact Created Successfully</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
-                    <button type="button" class="btn btn-primary" @onclick="OkClick">OK</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <AlertDialog Title="Suceess"
+                 BodyText="Contact Created Successfully"
+                 IsDelete="false"
+                 CloseBtnClick="Cancel"
+                 OkBtnClick="OkClick" />
 }
 
 @code {
