@@ -1,0 +1,113 @@
+﻿@page "/admin/contacts/details/{userId:int}"
+@page "/admin/contacts/details/{userId:int}/update"
+@layout MainLayout
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h4 style="margin-left:-2px; margin-bottom:15px">@headerTitle</h4>
+
+<div class="container-fluid d-flex justify-content-center" style="margin-left:-25px">
+    <div class="card p-3 shadow-lg" style="width: 1035px; height: 430px">
+        @if (userModel == null)
+        {
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        }
+        else 
+        {
+            <EditForm Model="@userModel">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="firstname" class="form-label">First Name</label>
+                        <InputText class="form-control" id="firstname" @bind-Value="userModel.FirstName" disabled="@(!isEditMode)" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="lastname" class="form-label">Last Name</label>
+                        <InputText class="form-control" id="lastname" @bind-Value="userModel.LastName" disabled="@(!isEditMode)" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <InputText class="form-control" id="email" @bind-Value="userModel.Email" disabled="@(!isEditMode)" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="phonenumber" class="form-label">Phone Number</label>
+                        <InputText class="form-control" id="phonenumber" @bind-Value="userModel.PhoneNumber" disabled="@(!isEditMode)" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="whatsapp" class="form-label">WhatsApp Number</label>
+                        <InputText class="form-control" id="whatsapp" @bind-Value="userModel.WhatsApp" disabled="@(!isEditMode)" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="address" class="form-label">Address</label>
+                        <InputText class="form-control" id="address" @bind-Value="userModel.Address" disabled="@(!isEditMode)" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <InputTextArea class="form-control" id="description" @bind-Value="userModel.Description" disabled="@(!isEditMode)" />
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-secondary me-2" @onclick="Cancel">Cancel</button>
+                    @if (isEditMode)
+                    {
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    }
+                </div>
+            </EditForm>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public int userId { get; set; }
+    private bool isEditMode = false;
+    public UserModel userModel { get; set; }
+    private string headerTitle = "Contact Details";
+
+    protected override async Task OnInitializedAsync()
+    {
+        isEditMode = NavigationManager.Uri.EndsWith("/update", StringComparison.OrdinalIgnoreCase);
+
+        headerTitle = isEditMode ? "Update Contact Details" : "Contact Details";
+
+        await LoadUserDetailsAsync();
+    }
+
+    private async Task LoadUserDetailsAsync()
+    {
+        if (AppSettings.APIUrl != null)
+            userModel = await Http.GetFromJsonAsync<UserModel>($"{AppSettings.APIUrl}/contact/{userId}");
+    }
+        
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/admin/contacts");
+    }
+
+    public class UserModel
+    {
+        public int Id { get; set; }
+        public string? DisplayName { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public string? Email { get; set; }
+        public string? PhoneNumber { get; set; }
+        public string? WhatsApp { get; set; }
+        public string? Address { get; set; }
+        public string Role { get; set; }
+        public Guid Guid { get; set; }
+        public string? Description { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
+    }
+}

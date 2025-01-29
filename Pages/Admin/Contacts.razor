@@ -4,10 +4,10 @@
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 
-<h3 style="margin-left:-2px; margin-bottom:15px">My Contacts</h3>
+<h4 style="margin-left:-2px; margin-bottom:15px">My Contacts</h4>
 
 <div class="container-fluid d-flex justify-content-center" style="margin-left:-25px">
-    <div class="card p-3 shadow-lg" style="width: 1000px; height: 440px">
+    <div class="card p-3 shadow-lg" style="width: 1035px; height: 430px">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div class="d-flex align-items-center">
                 <input type="text" class="form-control me-2" placeholder="Search..." style="width: 250px;" />
@@ -52,10 +52,10 @@
                             <td>@user.CreatedAt.UtcDateTime.ToString("yyyy-MM-dd")</td>
                             <td>
                                 <div class="d-flex">
-                                    <button class="btn btn-sm me-2" title="View Details">
+                                    <button class="btn btn-sm me-2" title="View More" @onclick="() => NavigateToDetails(user.Id, false)">
                                         <i class="bi bi-folder-fill"></i>
                                     </button>
-                                    <button class="btn btn-sm me-2" title="Edit">
+                                    <button class="btn btn-sm me-2" title="Update" @onclick="() => NavigateToDetails(user.Id, true)">
                                         <i class="bi bi-pen-fill"></i>
                                     </button>
                                     <button class="btn btn-sm" title="Delete" @onclick="() => ConfirmDelete(user.Id)">
@@ -105,10 +105,18 @@
 
     private async Task LoadUsersAsync()
     {
-        await Task.Delay(1000);
+        isLoading = true;
         if (AppSettings.APIUrl != null)
             userList = await Http.GetFromJsonAsync<UserModel[]>($"{AppSettings.APIUrl}/contact");
         isLoading = false;
+    }
+
+    private void NavigateToDetails(int userId, bool isEditMode)
+    {
+        if (isEditMode)
+            NavigationManager.NavigateTo($"/admin/contacts/details/{userId}/update");
+        else
+            NavigationManager.NavigateTo($"/admin/contacts/details/{userId}");
     }
 
     private async Task DeleteUserAsync()
