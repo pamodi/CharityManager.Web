@@ -1,0 +1,117 @@
+﻿@page "/admin/projects/create"
+@layout MainLayout
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+@using System.ComponentModel.DataAnnotations
+
+<h4 style="margin-left:-2px; margin-bottom:15px">Create Project</h4>
+
+<div class="container-fluid d-flex justify-content-center" style="margin-left:-25px">
+    <div class="card p-3 shadow-lg" style="width: 1035px; height: 430px">
+        <EditForm Model="@projectCreateRequest" OnValidSubmit="HandleProjectCreate">
+            <DataAnnotationsValidator />
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="projectname" class="form-label">Project Name</label>
+                    <InputText class="form-control" id="projectname" @bind-Value="projectCreateRequest.Name" placeholder="Enter Project Name" required />
+                    <ValidationMessage For="@(() => projectCreateRequest.Name)" />
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <InputTextArea class="form-control" id="description" @bind-Value="projectCreateRequest.Description" placeholder="Enter Project Description" />
+                <ValidationMessage For="@(() => projectCreateRequest.Description)" />
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="category" class="form-label">Category</label>
+                    <InputText class="form-control" id="category" @bind-Value="projectCreateRequest.Category" placeholder="Enter Project Category" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="coordinator" class="form-label">Coordinator</label>
+                    <InputText class="form-control" id="coordinator" @bind-Value="projectCreateRequest.Coordinator" placeholder="Enter Project Coordinator" />
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label for="status" class="form-label">Status</label>
+                <InputText class="form-control" id="status" @bind-Value="projectCreateRequest.Status" placeholder="Enter Project Status" />
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-secondary me-2" @onclick="Cancel">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+            @if (errorMessage != null)
+            {
+                <div class="alert alert-danger mt-3">@errorMessage</div>
+            }
+        </EditForm>
+    </div>
+</div>
+
+<!-- Success Modal -->
+@if (showSuccessModal)
+{
+    <AlertDialog Title="Suceess"
+                 BodyText="Project Created Successfully"
+                 IsDelete="false"
+                 CloseBtnClick="Cancel"
+                 OkBtnClick="OkClick" />
+}
+
+@code {
+    private ProjectCreateRequest projectCreateRequest = new ProjectCreateRequest();
+    private string errorMessage = null;
+    private bool showSuccessModal = false;
+
+    private async Task HandleProjectCreate()
+    {
+        try
+        {
+            var response = await Http.PostAsJsonAsync($"{AppSettings.APIUrl}/project", projectCreateRequest);
+            if (response.IsSuccessStatusCode)
+            {
+                showSuccessModal = true;
+            }
+            else
+            {
+                errorMessage = "Error in project creation.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An error occurred: " + ex.Message;
+        }
+    }
+
+    private void OkClick()
+    {
+        showSuccessModal = false;
+        NavigateToProjects();
+    }
+
+    private void Cancel()
+    {
+        showSuccessModal = false;
+        NavigateToProjects();
+    }
+
+    private void NavigateToProjects()
+    {
+        NavigationManager.NavigateTo("/admin/projects");
+    }
+
+    public class ProjectCreateRequest
+    {
+        [Required]
+        public string Name { get; set; }
+        public string? Description { get; set; }
+        public string? Status { get; set; }
+        public string? Category { get; set; }
+        public string? Coordinator { get; set; }
+    }
+}
+
