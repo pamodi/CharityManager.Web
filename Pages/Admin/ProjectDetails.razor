@@ -56,10 +56,6 @@
                         <button type="submit" class="btn btn-primary" @onclick="UpdateProject">Update</button>
                     }
                 </div>
-                @if (errorMessage != null)
-                {
-                    <div class="alert alert-danger mt-3">@errorMessage</div>
-                }
             </EditForm>
         }
     </div>
@@ -81,7 +77,6 @@
     public ProjectModel projectModel { get; set; }
     private string headerTitle = "Project Details";
     private bool showSuccessModal = false;
-    private string errorMessage = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -105,8 +100,6 @@
             var response = await Http.PutAsJsonAsync($"{AppSettings.APIUrl}/project/{projectId}", projectModel);
             if (response.IsSuccessStatusCode)
                 showSuccessModal = true;
-            else
-                errorMessage = "Error in project update.";
         }
     }
 

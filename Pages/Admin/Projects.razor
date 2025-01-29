@@ -12,7 +12,7 @@
                 <input type="text" class="form-control me-2" placeholder="Search..." style="width: 250px;" />
                 <button class="btn btn-secondary">Clear</button>
             </div>
-            <button class="btn btn-success" @onclick="CreateContact">Create Project</button>
+            <button class="btn btn-success" @onclick="CreateProject">Create Project</button>
         </div>
 
         @if (projectsList == null || !projectsList.Any())
@@ -57,7 +57,7 @@
                                     <button class="btn btn-sm me-2" title="Update" @onclick="() => NavigateToDetails(project.Id, true)">
                                         <i class="bi bi-pen-fill"></i>
                                     </button>
-                                    <button class="btn btn-sm" title="Delete" >
+                                    <button class="btn btn-sm" title="Delete" @onclick="() => ConfirmDelete(project.Id)">
                                         <i class="bi bi-trash-fill"></i>
                                     </button>
                                 </div>
@@ -70,15 +70,26 @@
     </div>
 </div>
 
+<!-- Delete Confirmation Modal -->
+@if (showDeleteModal)
+{
+    <AlertDialog Title="Confirm Delete"
+                 BodyText="Are you sure you want to delete this project?"
+                 IsDelete="true"
+                 CloseBtnClick="CancelDelete"
+                 DeleteBtnClick="DeleteProjectAsync" />
+}
 
 @code {
 
     private IEnumerable<ProjectModel> projectsList = Enumerable.Empty<ProjectModel>();
     private bool isLoading = true;
+    private bool showDeleteModal = false;
+    private int projectIdToDelete;
 
-    protected override async Task OnInitializedAsync() => await LoadUsersAsync();
+    protected override async Task OnInitializedAsync() => await LoadProjectsAsync();
 
-    private async Task LoadUsersAsync()
+    private async Task LoadProjectsAsync()
     {
         isLoading = true;
         if (AppSettings.APIUrl != null)
@@ -105,8 +116,24 @@
         public DateTimeOffset CreatedAt { get; set; }
     }
 
-    private void CreateContact()
+    private void CreateProject()
     {
         NavigationManager.NavigateTo("/admin/projects/create");
     }
+
+    private void ConfirmDelete(int id)
+    {
+        projectIdToDelete = id;
+        showDeleteModal = true;
+    }
+
+    private async Task DeleteProjectAsync()
+    {
+        if (AppSettings.APIUrl != null)
+            await Http.DeleteAsync($"{AppSettings.APIUrl}/project/{projectIdToDelete}");
+        showDeleteModal = false;
+        await LoadProjectsAsync();
+    }
+
+    private void CancelDelete() => showDeleteModal = false;
 }
