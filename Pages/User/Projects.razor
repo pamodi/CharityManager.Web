@@ -75,7 +75,7 @@
     {
         isLoading = true;
         if (AppSettings.APIUrl != null)
-            projectsList = await Http.GetFromJsonAsync<ProjectModel[]>($"{AppSettings.APIUrl}/project");
+            projectsList = await Http.GetFromJsonAsync<ProjectModel[]>($"{AppSettings.APIUrl}/project/pending");
         isLoading = false;
     }
 
