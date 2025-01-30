@@ -38,7 +38,7 @@
                                         <ValidationMessage For="@(() => loginRequest.Password)" class="text-danger" />
                                     </div>
                                     <div class="d-grid">
-                                        <button class="btn btn-dark btn-lg" type="submit">LOGIN</button>
+                                        <button class="btn btn-dark btn-md" type="submit">LOGIN</button>
                                     </div>
                                 </EditForm>
 
@@ -52,7 +52,7 @@
                                 }
 
                                 <div class="text-center mt-4 text-muted" style="font-size:small">
-                                    &copy; @DateTime.UtcNow.Year | Developed by <strong>Pamodi Rathnayake</strong>
+                                    <small>&copy; @DateTime.UtcNow.Year | Developed by <strong><em>Pamodi Rathnayake</em></strong></small>
                                 </div>
                             </div>
                         </div>
@@ -81,6 +81,7 @@
                     return;
                 }
                 await JSRuntime.InvokeVoidAsync("localStorage.setItem", "role", result.Role);
+                await JSRuntime.InvokeVoidAsync("localStorage.setItem", "name", result.DisplayName);
                 Navigation.NavigateTo(result.Role == "ADMIN" ? "/admin/home" : "/user/home");
             }
             else
@@ -113,6 +114,7 @@
     private class LoginResponse
     {
         public bool IsSuccess { get; set; }
+        public string DisplayName { get; set; }
         public string Role { get; set; }
         public string Message { get; set; }
     }
