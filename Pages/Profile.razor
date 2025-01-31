@@ -7,7 +7,7 @@
 <h5 style="margin-left:-2px; margin-bottom:15px">Profile</h5>
 
 <div class="container-fluid d-flex justify-content-center" style="margin-left:-25px">
-    <div class="card p-3 shadow-lg" style="width: 1038px; height: 420px">
+    <div class="card p-3 shadow-lg w-100 h-100">
         <EditForm Model="@profileModel" OnValidSubmit="Save">
             <DataAnnotationsValidator />
             <div class="row">
@@ -41,10 +41,31 @@
                     <InputText class="form-control" id="whatsapp" @bind-Value="profileModel.WhatsApp" />
                     <ValidationMessage For="@(() => profileModel.WhatsApp)" />
                 </div>
-                
                 <div class="col-md-6 mb-3">
-                    <label for="address" class="form-label">Address</label>
-                    <InputText class="form-control" id="address" @bind-Value="profileModel.Address" />
+                    <label for="street" class="form-label">Street</label>
+                    <InputText class="form-control" id="street" @bind-Value="profileModel.Street" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="city" class="form-label">City</label>
+                    <InputText class="form-control" id="city" @bind-Value="profileModel.City" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="province" class="form-label">Province</label>
+                    <InputText class="form-control" id="province" @bind-Value="profileModel.Province" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="country" class="form-label">Country</label>
+                    <InputText class="form-control" id="country" @bind-Value="profileModel.Country" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="postalCode" class="form-label">Postal Code</label>
+                    <InputText class="form-control" id="postalCode" @bind-Value="profileModel.PostalCode" />
                 </div>
             </div>
 
@@ -116,6 +137,10 @@
         public string? PhoneNumber { get; set; }
         [Phone]
         public string? WhatsApp { get; set; }
-        public string? Address { get; set; }
+        public string? Street { get; set; }
+        public string? City { get; set; }
+        public string? Province { get; set; }
+        public string? Country { get; set; }
+        public string? PostalCode { get; set; }
     }
 }

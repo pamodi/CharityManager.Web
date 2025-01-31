@@ -7,7 +7,7 @@
 <h4 style="margin-left:-2px; margin-bottom:15px">@headerTitle</h4>
 
 <div class="container-fluid d-flex justify-content-center" style="margin-left:-25px">
-    <div class="card p-3 shadow-lg" style="width: 1035px; height: 430px">
+    <div class="card p-3 shadow-lg w-100 h-100">
         @if (userModel == null)
         {
             <div class="d-flex justify-content-center">
@@ -52,8 +52,30 @@
                         <ValidationMessage For="@(() => userModel.WhatsApp)" />
                       </div>
                     <div class="col-md-6 mb-3">
-                        <label for="address" class="form-label">Address</label>
-                        <InputText class="form-control" id="address" @bind-Value="userModel.Address" disabled="@(!isEditMode)" />
+                        <label for="street" class="form-label">Street</label>
+                        <InputText class="form-control" id="street" @bind-Value="userModel.Street" disabled="@(!isEditMode)" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="city" class="form-label">City</label>
+                        <InputText class="form-control" id="city" @bind-Value="userModel.City" disabled="@(!isEditMode)" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="province" class="form-label">Province</label>
+                        <InputText class="form-control" id="province" @bind-Value="userModel.Province" disabled="@(!isEditMode)" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="country" class="form-label">Country</label>
+                        <InputText class="form-control" id="country" @bind-Value="userModel.Country" disabled="@(!isEditMode)" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="postalCode" class="form-label">Postal Code</label>
+                        <InputText class="form-control" id="postalCode" @bind-Value="userModel.PostalCode" disabled="@(!isEditMode)" />
                     </div>
                 </div>
 
@@ -136,7 +158,11 @@
         public string? Email { get; set; }
         public string? PhoneNumber { get; set; }
         public string? WhatsApp { get; set; }
-        public string? Address { get; set; }
+        public string? Street { get; set; }
+        public string? City { get; set; }
+        public string? Province { get; set; }
+        public string? Country { get; set; }
+        public string? PostalCode { get; set; }
         public string Role { get; set; }
         public Guid Guid { get; set; }
         public string? Description { get; set; }
