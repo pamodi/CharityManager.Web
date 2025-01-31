@@ -1,9 +1,121 @@
 ﻿@page "/profile"
 @layout MainLayout
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 
-<h4 style="margin-left:-2px; margin-bottom:15px">Profile</h4>
+<h5 style="margin-left:-2px; margin-bottom:15px">Profile</h5>
 
 <div class="container-fluid d-flex justify-content-center" style="margin-left:-25px">
-    <div class="card p-3 shadow-lg" style="width: 1035px; height: 430px">
+    <div class="card p-3 shadow-lg" style="width: 1038px; height: 420px">
+        <EditForm Model="@profileModel" OnValidSubmit="Save">
+            <DataAnnotationsValidator />
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="firstname" class="form-label">First Name</label>
+                    <InputText class="form-control" id="firstname" @bind-Value="profileModel.FirstName" required />
+                    <ValidationMessage For="@(() => profileModel.FirstName)" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="lastname" class="form-label">Last Name</label>
+                    <InputText class="form-control" id="lastname" @bind-Value="profileModel.LastName" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <InputText class="form-control" id="email" @bind-Value="profileModel.Email" />
+                    <ValidationMessage For="@(() => profileModel.Email)" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="phonenumber" class="form-label">Phone Number</label>
+                    <InputText class="form-control" id="phonenumber" @bind-Value="profileModel.PhoneNumber" />
+                    <ValidationMessage For="@(() => profileModel.PhoneNumber)" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="whatsapp" class="form-label">WhatsApp Number</label>
+                    <InputText class="form-control" id="whatsapp" @bind-Value="profileModel.WhatsApp" />
+                    <ValidationMessage For="@(() => profileModel.WhatsApp)" />
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="address" class="form-label">Address</label>
+                    <InputText class="form-control" id="address" @bind-Value="profileModel.Address" />
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-secondary me-2" @onclick="Cancel">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+            @if (errorMessage != null)
+            {
+                <div class="alert alert-danger mt-3">@errorMessage</div>
+            }
+        </EditForm>
     </div>
 </div>
+
+<!-- Success Modal -->
+@if (showSuccessModal)
+{
+    <AlertDialog Title="Suceess" BodyText="Profile Updated Successfully" IsDelete="false" CloseBtnClick="Cancel"
+        OkBtnClick="Cancel" />
+}
+
+@code {
+    public string userId { get; set; }
+    public int id { get; set; }
+    public ProfileModel profileModel = new ProfileModel();
+    private bool showSuccessModal = false;
+    private string errorMessage = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        userId = await JSRuntime.InvokeAsync<string>("localStorage.getItem", new object[] { "userId" });
+        id = Convert.ToInt32(userId);
+        await LoadUserDetailsAsync();
+    }
+
+    private async Task LoadUserDetailsAsync()
+    {
+        if (AppSettings.APIUrl != null)
+            profileModel = await Http.GetFromJsonAsync<ProfileModel>($"{AppSettings.APIUrl}/contact/{id}");
+    }
+
+    private async Task Save()
+    {
+        if (AppSettings.APIUrl != null)
+        {
+            var response = await Http.PutAsJsonAsync($"{AppSettings.APIUrl}/contact/{userId}", profileModel);
+            if (response.IsSuccessStatusCode)
+                showSuccessModal = true;
+            else
+                errorMessage = "Error in profile update.";
+        }
+    }
+
+    public void Cancel()
+    {
+        NavigationManager.NavigateTo("/admin/home");
+    }
+
+    public class ProfileModel
+    {
+        public int Id { get; set; }
+        [Required]
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        [EmailAddress]
+        public string? Email { get; set; }
+        [Phone]
+        public string? PhoneNumber { get; set; }
+        [Phone]
+        public string? WhatsApp { get; set; }
+        public string? Address { get; set; }
+    }
+}

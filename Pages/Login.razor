@@ -80,6 +80,7 @@
                     errorMessage = result?.Message ?? "Invalid username or password.";
                     return;
                 }
+                await JSRuntime.InvokeVoidAsync("localStorage.setItem", "userId", result.Id);
                 await JSRuntime.InvokeVoidAsync("localStorage.setItem", "role", result.Role);
                 await JSRuntime.InvokeVoidAsync("localStorage.setItem", "name", result.DisplayName);
                 Navigation.NavigateTo(result.Role == "ADMIN" ? "/admin/home" : "/user/home");
@@ -114,6 +115,7 @@
     private class LoginResponse
     {
         public bool IsSuccess { get; set; }
+        public int Id { get; set; }
         public string DisplayName { get; set; }
         public string Role { get; set; }
         public string Message { get; set; }
